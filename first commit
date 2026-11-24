@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Made by Acerkaio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 18px;
+    background: #07080f;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ 背景层 ============ */
+  .bg-img {
+    position: fixed;
+    inset: -100px;
+    background: url("https://pic1.imgdb.cn/i/0351UCAIG1Un9kKoQZLRti.jpg") center / cover no-repeat;
+    filter: blur(42px) saturate(1.45) brightness(0.68);
+    transform: scale(1.12);
+    z-index: -3;
+  }
+
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(120, 150, 255, 0.28), transparent 62%),
+      radial-gradient(100% 90% at 50% 110%, rgba(255, 90, 150, 0.22), transparent 62%),
+      linear-gradient(180deg, rgba(5, 6, 12, 0.30), rgba(5, 6, 12, 0.78));
+  }
+
+  /* ============ 漂浮光晕 ============ */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(64px);
+    opacity: 0.55;
+    z-index: -2;
+    pointer-events: none;
+    animation: float 20s ease-in-out infinite;
+  }
+  .orb.a { width: 340px; height: 340px; background: #5b8cff; top: -90px; left: -70px; }
+  .orb.b { width: 300px; height: 300px; background: #ff5fa2; bottom: -80px; right: -60px; animation-delay: -7s; }
+  .orb.c { width: 240px; height: 240px; background: #34e5cd; top: 42%; right: 8%; animation-delay: -13s; }
+
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50%      { transform: translate3d(34px, -46px, 0) scale(1.14); }
+  }
+
+  /* ============ 毛玻璃卡片 ============ */
+  .card {
+    position: relative;
+    width: min(94vw, 460px);
+    padding: 18px 18px 26px;
+    border-radius: 28px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.20), rgba(255,255,255,0.06));
+    backdrop-filter: blur(26px) saturate(180%);
+    -webkit-backdrop-filter: blur(26px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    box-shadow:
+      0 34px 70px -18px rgba(0, 0, 0, 0.60),
+      0 4px 18px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.50),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+               breathe 7s ease-in-out 1s infinite;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* 顶部高光边 */
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 12%; right: 12%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+    pointer-events: none;
+  }
+
+  /* 扫光 */
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(115deg,
+      transparent 32%, rgba(255,255,255,0.38) 47%, transparent 62%);
+    background-size: 250% 250%;
+    background-position: 150% 0;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+  .card:hover::after {
+    opacity: 1;
+    animation: sheen 1.5s ease forwards;
+  }
+
+  @keyframes sheen {
+    from { background-position: 150% 0; }
+    to   { background-position: -60% 0; }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(28px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-9px); }
+  }
+
+  /* ============ 图片 ============ */
+  .photo {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 12px 32px -10px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+
+  .photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .card:hover .photo img {
+    transform: scale(1.045);
+  }
+
+  /* 图片底部渐隐，让卡片更融合 */
+  .photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 62%, rgba(10, 12, 22, 0.35));
+    pointer-events: none;
+  }
+
+  /* ============ 署名 ============ */
+  .credit {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 15px;
+    letter-spacing: 0.4px;
+    color: rgba(255, 255, 255, 0.82);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .credit a {
+    position: relative;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 2px 2px;
+    background: linear-gradient(90deg, #9ec5ff, #ffffff, #ffb4d1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: filter 0.3s ease;
+  }
+
+  .credit a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #9ec5ff, #ffb4d1);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .credit a:hover { filter: drop-shadow(0 0 10px rgba(180, 205, 255, 0.9)); }
+  .credit a:hover::after { transform: scaleX(1); }
+
+  .credit a:focus-visible {
+    outline: 2px solid rgba(180, 205, 255, 0.9);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* 爱心 */
+  .heart {
+    display: inline-block;
+    margin-left: 3px;
+    font-size: 15px;
+    color: #ff4d6d;
+    filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.85));
+    animation: beat 1.4s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    18%      { transform: scale(1.28); }
+    36%      { transform: scale(1.05); }
+    54%      { transform: scale(1.22); }
+  }
+
+  /* ============ 降级 / 无障碍 ============ */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .card { background: rgba(24, 26, 40, 0.78); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .card { padding: 14px 14px 22px; border-radius: 24px; }
+    .credit { font-size: 14px; margin-top: 16px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-img"></div>
+  <div class="bg-overlay"></div>
+  <div class="orb a"></div>
+  <div class="orb b"></div>
+  <div class="orb c"></div>
+
+  <main class="card">
+    <figure class="photo">
+      <img src="https://pic1.imgdb.cn/i/0351UCAIG1Un9kKoQZLRti.jpg" alt="Acerkaio 的作品" loading="eager" />
+    </figure>
+
+    <p class="credit">
+      Made by <a href="https://www.acerkaio.top" target="_blank" rel="noopener noreferrer">Acerkaio</a>
+      with <span class="heart" role="img" aria-label="爱">❤</span>
+    </p>
+  </main>
+
+</body>
+</html>
